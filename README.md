@@ -4,11 +4,11 @@ A conversion script for zjuter from zf system class timetable to iCal.
 Call WeJH's Api (login, get the class table)
 And Transfer the raw json data to icalendar.
 
-# Features
+# Features and TO-DOs
 
 - [x] Generate `.ics` file.
 - [ ] Convert Exam Events
-- [ ]
+- [ ] Inject custom Events and TO-DOs
 
 # How to use
 
