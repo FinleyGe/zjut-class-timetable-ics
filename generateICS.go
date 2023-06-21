@@ -1,50 +1,34 @@
 package main
 
 import (
-	"log"
-	"os"
+	// "fmt"
+
+	"fmt"
+
+	ics "github.com/arran4/golang-ical"
 )
 
-type ICS struct {
-	ProdID   string
-	Version  string
-	CalScale string
-	Method   string
-	Events   []Event
-}
-
-type Event struct {
-	UID         string
-	DTSTAMP     string
-	DTSTART     string
-	DTEND       string
-	SUMMARY     string
-	DESCRIPTION string
-	LOCATION    string
-}
-
-func GenerateICSFile(ics ICS, filename string) {
-	// generate ics file
-	file, err := os.Create(filename)
-	if err != nil {
-		log.Fatalln(err)
+func generateICS(classes []Class) string {
+	cal := ics.NewCalendar()
+	cal.SetMethod(ics.MethodRequest)
+	cal.SetVersion("2.0")
+	cal.SetXWRCalName("浙江工业大学课程表")
+	// cal.SetTimezoneId("Asia/Shanghai")
+	for _, class := range classes {
+		start, end, repeat := class.getTime()
+		// for r := 0; r < repeat; r++ {
+		lesson := cal.AddEvent(class.getUID())
+		lesson.SetSummary(class.LessonName)
+		lesson.SetDescription(class.TeacherName)
+		lesson.SetLocation(class.LessonPlace)
+		lesson.SetStartAt(start)
+		lesson.SetEndAt(end)
+		// fmt.Println(lesson.Serialize())
+		// }
+		if repeat > 1 {
+			lesson.AddRrule(fmt.Sprintf("FREQ=WEEKLY;COUNT=%d", repeat))
+		}
 	}
-	defer file.Close()
-	file.WriteString("BEGIN:VCALENDAR\n")
-	file.WriteString("PRODID:" + ics.ProdID + "\n")
-	file.WriteString("VERSION:" + ics.Version + "\n")
-	file.WriteString("CALSCALE:" + ics.CalScale + "\n")
-	file.WriteString("METHOD:" + ics.Method + "\n")
-	for _, event := range ics.Events {
-		file.WriteString("BEGIN:VEVENT\n")
-		file.WriteString("UID:" + event.UID + "\n")
-		file.WriteString("DTSTAMP:" + event.DTSTAMP + "\n")
-		file.WriteString("DTSTART:" + event.DTSTART + "\n")
-		file.WriteString("DTEND:" + event.DTEND + "\n")
-		file.WriteString("SUMMARY:" + event.SUMMARY + "\n")
-		file.WriteString("DESCRIPTION:" + event.DESCRIPTION + "\n")
-		file.WriteString("LOCATION:" + event.LOCATION + "\n")
-		file.WriteString("END:VEVENT\n")
-	}
-	file.WriteString("END:VCALENDAR\n")
+
+	return cal.Serialize()
 }

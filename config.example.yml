@@ -2,3 +2,6 @@ login_url: example.com/api/user/login
 class_url: example.com/api/func/zf/classtable
 username: 202020202020
 password: 123456
+term: 下
+year: 2022
+start: "2023-02-20"

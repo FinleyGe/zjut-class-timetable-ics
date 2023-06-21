@@ -2,7 +2,10 @@ module zjut_class_timetable_ics
 
 go 1.20
 
-require github.com/spf13/viper v1.16.0
+require (
+	github.com/arran4/golang-ical v0.0.0-20230425234049-f69e132f2b0c
+	github.com/spf13/viper v1.16.0
+)
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
