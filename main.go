@@ -25,8 +25,7 @@ var classTime []string = []string{
 	"13:30:00",
 	"14:25:00",
 	"15:25:00",
-	"16:10:00",
-	"17:05:00",
+	"16:20:00",
 
 	"18:30:00",
 	"19:25:00",
@@ -85,9 +84,6 @@ func (c Class) getTime() (time.Time, time.Time, int) {
 	var weekday int = int(c.Weekday[0] - '0')
 	var weekstart int
 	var weekend int
-
-	// Remove the last character '周'
-
 	c.Week = c.Week[:len(c.Week)-3]
 
 	if utf8.RuneCountInString(c.Week) > 2 {
@@ -164,12 +160,14 @@ func GetClasses() {
 		if strings.Contains(classes[i].Week, ",") {
 			weeks := strings.Split(classes[i].Week, ",")
 			classes[i].Week = weeks[0]
-			for j := 1; j < len(weeks); j++ {
+			for j := 0; j < len(weeks); j++ {
 				classes[i].Week = weeks[j]
+				// classes[i].LessonName = classes[i].LessonName + "-" + strconv.Itoa(j+1)
 				classes = append(classes, classes[i])
 			}
 		}
 	}
+	fmt.Println(classes)
 }
 
 func main() {
@@ -177,8 +175,7 @@ func main() {
 	Login()
 	GetClasses()
 	s := generateICS(classes)
-	// println(s)
-	// save to file
+	fmt.Println(classes)
 	f, err := os.Create("class.ics")
 	if err != nil {
 		log.Fatalln(err)
